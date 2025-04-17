@@ -43,17 +43,18 @@ int	main(int argc, char const *argv[])
 	t_game	game;
 
 	if (argc != 2)
-		ft_error_exit("Error. Uso: ./so_long <mapa.ber>\n", 2);
+		ft_error_exit("Error. Use: ./so_long <map.ber>\n", 2);
 	if (!is_valid_extension(argv[1]))
-		ft_error_exit("Error. El archivo debe tener extensión .ber\n", 2);
+		ft_error_exit("Error. The map should have the extension .ber\n", 2);
 	load_map(argv[1], &map);
 	copy = copy_map(map.grid, map.height);
 	if (!(flood_fill(&map, copy, map.collectible_count, map.exit_count)))
-		ft_error_exit("El mapa es irresoluble\n", 2);
+		ft_error_exit("The map has no solution\n", 2);
 	game_init(&game, &map);
 	load_textures(&game);
 	render_map(&game);
 	mlx_key_hook(game.win, handle_input, &game);
+	mlx_hook(game.win, 17, 0, close_game, &game);
 	mlx_loop(game.mlx);
 	return (0);
 }

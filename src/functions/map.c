@@ -12,7 +12,7 @@
 
 #include "../../includes/so_long.h"
 
-static void initialise_map(t_map *map);
+static void	initialise_map(t_map *map);
 static char	**append_line(char **lines, char *line, int count);
 
 void	load_map(const char *filename, t_map *map)
@@ -26,15 +26,17 @@ void	load_map(const char *filename, t_map *map)
 	if (fd == -1)
 		ft_error_exit("open", 1);
 	count = 0;
-	while ((line = get_next_line(fd)))
+	line = get_next_line(fd);
+	while (line)
 	{
 		if (line[ft_strlen(line) - 1] == '\n')
 			line[ft_strlen(line) - 1] = '\0';
 		if (count == 0)
 			map -> width = ft_strlen(line);
 		if ((int) ft_strlen(line) != map -> width)
-			ft_error_exit("Error. El mapa debe ser un rectangulo\n", 2);
+			ft_error_exit("Error. The map should be a rectangle\n", 2);
 		map -> grid = append_line(map -> grid, line, count);
+		line = get_next_line(fd);
 		count++;
 	}
 	map -> height = count;
@@ -72,9 +74,9 @@ static char	**append_line(char **lines, char *line, int count)
 	return (array);
 }
 
-char **copy_map(char **original, int height)
+char	**copy_map(char **original, int height)
 {
-	char 	**copy;
+	char	**copy;
 	int		i;
 
 	i = 0;

@@ -12,21 +12,25 @@
 
 #include "../../includes/so_long.h"
 
-void	flood(char **grid, int x, int y, int *collectible_count, int *exit_count, int width, int height);
-int		is_valid_position(char **grid, int x, int y, int width, int height);
+void	flood(char **grid, int x, int y, int *collectible_count,
+			int *exit_count, int width, int height);
+int		is_valid_position(char **grid, int x, int y,
+			int width, int height);
 
-
-int		flood_fill(t_map *map, char **copy, int collectible_count, int exit_count)
+int	flood_fill(t_map *map, char **copy,
+		int collectible_count, int exit_count)
 {
-	flood(copy, map -> player_x, map -> player_y, &collectible_count, &exit_count, map -> width, map ->  height);
+	flood(copy, map -> player_x, map -> player_y, &collectible_count,
+		&exit_count, map -> width, map -> height);
 	if (!(collectible_count == 0 && exit_count != map -> exit_count))
 		return (0);
 	return (1);
 }
 
-void	flood(char **grid, int x, int y, int *collectible_count, int *exit_count, int width, int height)
+void	flood(char **grid, int x, int y, int *collectible_count,
+		int *exit_count, int width, int height)
 {
-	char c;
+	char	c;
 
 	if (!(is_valid_position(grid, x, y, width, height)))
 		return ;
@@ -42,10 +46,10 @@ void	flood(char **grid, int x, int y, int *collectible_count, int *exit_count, i
 	flood(grid, x, y - 1, collectible_count, exit_count, width, height);
 }
 
-int is_valid_position(char **grid, int x, int y, int width, int height)
+int	is_valid_position(char **grid, int x, int y, int width, int height)
 {
 	char	c;
-	
+
 	if (x <= 0 || width <= x)
 		return (0);
 	if (y <= 0 || height <= y)
