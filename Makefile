@@ -33,6 +33,7 @@ SRC =		src/so_long.c \
 			src/functions/game_settings.c \
 			src/functions/input.c \
 			src/functions/ft_print_string.c \
+			src/functions/free.c \
 			src/get_next_line/src/get_next_line.c \
 			src/get_next_line/src/get_next_line_utils.c
 
@@ -57,12 +58,10 @@ clean:
 	rm -f $(OBJ)
 	make -C $(LIBFT_DIR) clean
 	make -C $(PRINTF_DIR) clean
-	make -C $(MLX_DIR) clean
 
 fclean: clean
 	rm -f $(NAME)
 	make -C $(LIBFT_DIR) fclean
 	make -C $(PRINTF_DIR) fclean
-	make -C $(MLX_DIR) clean
 
 re: fclean all

@@ -12,12 +12,20 @@
 
 #include "../../includes/so_long.h"
 
+void	free_map_and_exit(t_map *map, char *msg, int code)
+{
+	free_map(map->grid);
+	get_next_line(-1);
+	ft_error_exit(msg, code);
+}
+
 void	ft_error_exit(char *msg, int exit_code)
 {
 	if (exit_code == 1)
 		perror(msg);
 	else
 		ft_putstr_fd(msg, 2);
+	get_next_line(-1);
 	exit(exit_code);
 }
 

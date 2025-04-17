@@ -40,7 +40,10 @@ void	load_textures(t_game *game)
 			"assets/player.xpm", &size, &size);
 	if (!game->textures.wall || !game->textures.floor || !game->textures.exit
 		|| !game->textures.collectible || !game->textures.player)
-		ft_error_exit("Error. Loading textures was not possible\n", 2);
+	{
+		ft_putstr_fd("Error. Loading textures was not possible\n", 2);
+		close_game(game);
+	}
 }
 
 static void	*get_tile_img(t_game *game, char tile)
@@ -58,6 +61,21 @@ static void	*get_tile_img(t_game *game, char tile)
 	return (NULL);
 }
 
+void	render_player_tile(t_game *game, int x, int y)
+{
+	if (x == game->map.player_x && y == game->map.player_y)
+	{
+		if (game->map.grid[y][x] == 'E')
+			mlx_put_image_to_window(game->mlx, game->win,
+				game->textures.exit, x * game->tile_size, y * game->tile_size);
+		else
+			mlx_put_image_to_window(game->mlx, game->win,
+				game->textures.floor, x * game->tile_size, y * game->tile_size);
+	}
+	mlx_put_image_to_window(game->mlx, game->win,
+		game->textures.player, x * game->tile_size, y * game->tile_size);
+}
+
 void	render_map(t_game *game)
 {
 	int		x;
@@ -73,21 +91,13 @@ void	render_map(t_game *game)
 		{
 			tile = game->map.grid[y][x];
 			if (tile == 'P')
-			{
-				if (game->map.grid[y][x] == 'P' &&
-					y == game->map.player_y && x == game->map.player_x &&
-					game->map.grid[y][x] != 'E' && game->map.grid[y][x] != 'C')
-					mlx_put_image_to_window(game->mlx, game->win, game->textures.floor, x * game->tile_size, y * game->tile_size);
-				if (y == game->map.player_y && x == game->map.player_x &&
-					game->map.grid[y][x] == 'E')
-					mlx_put_image_to_window(game->mlx, game->win, game->textures.exit, x * game->tile_size, y * game->tile_size);
-				mlx_put_image_to_window(game->mlx, game->win, game->textures.player, x * game->tile_size, y * game->tile_size);
-			}
+				render_player_tile(game, x, y);
 			else
 			{
 				img = get_tile_img(game, tile);
 				if (img)
-					mlx_put_image_to_window(game->mlx, game->win, img, x * game->tile_size, y * game->tile_size);
+					mlx_put_image_to_window(game->mlx, game->win, img,
+						x * game->tile_size, y * game->tile_size);
 			}
 			x++;
 		}

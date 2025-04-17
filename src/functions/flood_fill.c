@@ -12,47 +12,47 @@
 
 #include "../../includes/so_long.h"
 
-void	flood(char **grid, int x, int y, int *collectible_count,
-			int *exit_count, int width, int height);
-int		is_valid_position(char **grid, int x, int y,
-			int width, int height);
+void	flood(char **grid, int x, int y, t_flood *info);
+int		is_valid_position(char **grid, int x, int y, t_flood *info);
 
-int	flood_fill(t_map *map, char **copy,
-		int collectible_count, int exit_count)
+int	flood_fill(t_map *map, char **copy)
 {
-	flood(copy, map -> player_x, map -> player_y, &collectible_count,
-		&exit_count, map -> width, map -> height);
-	if (!(collectible_count == 0 && exit_count != map -> exit_count))
-		return (0);
-	return (1);
+	t_flood	info;
+
+	info.collectibles = map->collectible_count;
+	info.exits = map->exit_count;
+	info.width = map->width;
+	info.height = map->height;
+	flood(copy, map->player_x, map->player_y, &info);
+	free_map(copy);
+	return (info.collectibles == 0 && info.exits == 0);
 }
 
-void	flood(char **grid, int x, int y, int *collectible_count,
-		int *exit_count, int width, int height)
+void	flood(char **grid, int x, int y, t_flood *info)
 {
 	char	c;
 
-	if (!(is_valid_position(grid, x, y, width, height)))
+	if (!is_valid_position(grid, x, y, info))
 		return ;
 	c = grid[y][x];
 	if (c == 'C')
-		*collectible_count -= 1;
+		info->collectibles--;
 	if (c == 'E')
-		*exit_count -= 1;
+		info->exits--;
 	grid[y][x] = 'V';
-	flood(grid, x - 1, y, collectible_count, exit_count, width, height);
-	flood(grid, x + 1, y, collectible_count, exit_count, width, height);
-	flood(grid, x, y + 1, collectible_count, exit_count, width, height);
-	flood(grid, x, y - 1, collectible_count, exit_count, width, height);
+	flood(grid, x - 1, y, info);
+	flood(grid, x + 1, y, info);
+	flood(grid, x, y + 1, info);
+	flood(grid, x, y - 1, info);
 }
 
-int	is_valid_position(char **grid, int x, int y, int width, int height)
+int	is_valid_position(char **grid, int x, int y, t_flood *info)
 {
 	char	c;
 
-	if (x <= 0 || width <= x)
+	if (x <= 0 || info->width <= x)
 		return (0);
-	if (y <= 0 || height <= y)
+	if (y <= 0 || info->height <= y)
 		return (0);
 	c = grid[y][x];
 	if (c == 'V' || c == '1')

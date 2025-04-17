@@ -55,6 +55,14 @@ typedef struct s_game
 	int			steps;
 }	t_game;
 
+typedef struct s_flood
+{
+	int		collectibles;
+	int		exits;
+	int		width;
+	int		height;
+}	t_flood;
+
 # define KEY_W 119
 # define KEY_A 97
 # define KEY_S 115
@@ -67,8 +75,7 @@ typedef struct s_game
 // Funciones principales
 void	load_map(const char *filename, t_map *map);
 void	validate_map(t_map *map);
-int		flood_fill(t_map *map, char **copy,
-			int collectible_count, int exit_count);
+int		flood_fill(t_map *map, char **copy);
 
 // Game settings
 void	game_init(t_game *game, t_map *map);
@@ -77,10 +84,13 @@ void	render_map(t_game *game);
 int		handle_input(int keycode, t_game *game);
 
 // Funciones auxiliares
+void	free_map_and_exit(t_map *map, char *msg, int code);
 void	ft_error_exit(char *msg, int exit_code);
 int		is_valid_extension(const char *filename);
 char	**copy_map(char **original, int height);
 int		ft_print_string(const char *str);
 int		close_game(t_game *game);
+void	free_map(char **grid);
+void	free_textures(t_game *game);
 
 #endif

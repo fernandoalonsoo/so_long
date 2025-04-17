@@ -13,7 +13,7 @@
 #include "../../includes/so_long.h"
 
 static int	check_sorroundings(char **grid, int width, int height);
-static int	is_valid_char(char c);
+static int	is_valid_char(char c, t_map *map);
 static void	validate_position(t_map *map, char c, int width, int height);
 
 void	validate_map(t_map *map)
@@ -25,24 +25,23 @@ void	validate_map(t_map *map)
 	i = 0;
 	grid = map -> grid;
 	if (!check_sorroundings(grid, map -> width, map -> height))
-		ft_error_exit("Error. The map should be sorrounded by walls\n", 2);
+		free_map_and_exit(map,
+			"Error. The map should be surrounded by walls\n", 2);
 	while (i < map -> height)
 	{
-		j = 0;
-		while (j < map->width && is_valid_char(grid[i][j]))
-		{
+		j = -1;
+		while (++j < map->width && is_valid_char(grid[i][j], map))
 			validate_position(map, grid[i][j], i, j);
-			j++;
-		}
-		if (j < map->width && is_valid_char(grid[i][j]))
-			ft_error_exit("Error. Casilla no valida\n", 2);
+		if (j < map->width && is_valid_char(grid[i][j], map))
+			free_map_and_exit(map,
+				"Error. The map should be surrounded by walls\n", 2);
 		i++;
 	}
 	if (!(map -> player_count))
-		ft_error_exit("Error. There should be 1 player\n", 2);
+		free_map_and_exit(map, "Error. There should be 1 player\n", 2);
 	if ((map -> exit_count != 1) || !(map -> collectible_count))
-		ft_error_exit("Error. There should be only one exit"
-			"and at least one collectible \n", 2);
+		free_map_and_exit(map, "Error. There should be only one exit "
+			"and at least one collectible\n", 2);
 }
 
 static int	check_sorroundings(char **grid, int width, int height)
@@ -73,9 +72,12 @@ static int	check_sorroundings(char **grid, int width, int height)
 	return (1);
 }
 
-static int	is_valid_char(char c)
+static int	is_valid_char(char c, t_map *map)
 {
-	return (c == '1' || c == '0' || c == 'P' || c == 'E' || c == 'C');
+	if (c == '1' || c == '0' || c == 'P' || c == 'E' || c == 'C')
+		return (1);
+	free_map_and_exit(map, "Error. Invalid character\n", 2);
+	return (0);
 }
 
 static void	validate_position(t_map *map, char c, int width, int height)
@@ -91,7 +93,8 @@ static void	validate_position(t_map *map, char c, int width, int height)
 			map -> player_count += 1;
 		}
 		else
-			ft_error_exit("Error. The map should only have one character\n", 2);
+			free_map_and_exit(map,
+				"Error. The map should only have one character\n", 2);
 	}
 	else if (c == 'E')
 		map -> exit_count += 1;

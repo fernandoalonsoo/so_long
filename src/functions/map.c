@@ -14,6 +14,7 @@
 
 static void	initialise_map(t_map *map);
 static char	**append_line(char **lines, char *line, int count);
+static void	check_width(t_map *map, char *line, int count);
 
 void	load_map(const char *filename, t_map *map)
 {
@@ -25,23 +26,34 @@ void	load_map(const char *filename, t_map *map)
 	fd = open(filename, O_RDONLY);
 	if (fd == -1)
 		ft_error_exit("open", 1);
-	count = 0;
+	count = -1;
 	line = get_next_line(fd);
 	while (line)
 	{
-		if (line[ft_strlen(line) - 1] == '\n')
+		if (ft_strlen(line) > 0 && line[ft_strlen(line) - 1] == '\n')
 			line[ft_strlen(line) - 1] = '\0';
-		if (count == 0)
-			map -> width = ft_strlen(line);
-		if ((int) ft_strlen(line) != map -> width)
-			ft_error_exit("Error. The map should be a rectangle\n", 2);
-		map -> grid = append_line(map -> grid, line, count);
+		check_width(map, line, count);
+		map->grid = append_line(map->grid, line, count);
 		line = get_next_line(fd);
 		count++;
 	}
-	map -> height = count;
+	free(line);
+	map->height = count;
 	close(fd);
 	validate_map(map);
+}
+
+static void	check_width(t_map *map, char *line, int count)
+{
+	if (count == 0)
+		map->width = ft_strlen(line);
+	if ((int)ft_strlen(line) != map->width)
+	{
+		get_next_line(-1);
+		free(line);
+		free_map(map->grid);
+		ft_error_exit("Error. The map should be a rectangle\n", 2);
+	}
 }
 
 static void	initialise_map(t_map *map)
@@ -65,11 +77,13 @@ static char	**append_line(char **lines, char *line, int count)
 	i = 0;
 	while (i < count)
 	{
-		array[i] = lines[i];
+		array[i] = ft_strdup(lines[i]);
+		free(lines[i]);
 		i++;
 	}
-	array[i] = line;
+	array[i] = ft_strdup(line);
 	array[i + 1] = NULL;
+	free(line);
 	free(lines);
 	return (array);
 }

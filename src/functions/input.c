@@ -16,7 +16,12 @@ void	move_player(t_game *game, int dx, int dy);
 
 int	close_game(t_game *game)
 {
-	mlx_clear_window(game->mlx, game->win);
+	free_textures(game);
+	free_map(game->map.grid);
+	if (game->win)
+		mlx_destroy_window(game->mlx, game->win);
+	mlx_destroy_display(game->mlx);
+	free(game->mlx);
 	exit(0);
 	return (0);
 }
@@ -24,10 +29,7 @@ int	close_game(t_game *game)
 int	handle_input(int keycode, t_game *game)
 {
 	if (keycode == KEY_ESC)
-	{
-		mlx_destroy_window(game->mlx, game->win);
-		exit(0);
-	}
+		close_game(game);
 	else if (keycode == KEY_W)
 		move_player(game, 0, -1);
 	else if (keycode == KEY_S)
@@ -48,21 +50,22 @@ void	move_player(t_game *game, int dx, int dy)
 	new_x = game->map.player_x + dx;
 	new_y = game->map.player_y + dy;
 	next_tile = game->map.grid[new_y][new_x];
+	game->steps++;
 	if (next_tile == '1')
 		return ;
 	if (next_tile == 'C')
 		game->map.collectible_count--;
 	if (next_tile == 'E' && game->map.collectible_count == 0)
 	{
-		game->steps++;
-		exit(0);
+		ft_printf("Steps: %d\n", game->steps);
+		close_game(game);
 	}
 	if (game->map.grid[game->map.player_y][game->map.player_x] != 'E')
 		game->map.grid[game->map.player_y][game->map.player_x] = '0';
 	game->map.player_x = new_x;
 	game->map.player_y = new_y;
-	game->map.grid[new_y][new_x] = 'P';
-	game->steps++;
+	if (next_tile != 'E')
+		game->map.grid[new_y][new_x] = 'P';
 	ft_printf("Steps: %d\n", game->steps);
 	render_map(game);
 }
