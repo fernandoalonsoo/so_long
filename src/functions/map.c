@@ -26,7 +26,7 @@ void	load_map(const char *filename, t_map *map)
 	fd = open(filename, O_RDONLY);
 	if (fd == -1)
 		ft_error_exit("open", 1);
-	count = -1;
+	count = 0;
 	line = get_next_line(fd);
 	while (line)
 	{

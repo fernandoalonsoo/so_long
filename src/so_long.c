@@ -50,11 +50,9 @@ int	main(int argc, char const *argv[])
 	copy = copy_map(map.grid, map.height);
 	if (!(flood_fill(&map, copy)))
 	{
-		free_map(copy);
 		game.map = map;
 		free_map_and_exit(&game.map, "The map has no solution\n", 2);
 	}
-	free_map(copy);
 	game_init(&game, &map);
 	load_textures(&game);
 	render_map(&game);
