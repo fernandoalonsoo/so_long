@@ -22,7 +22,7 @@ void	free_map_and_exit(t_map *map, char *msg, int code)
 void	ft_error_exit(char *msg, int exit_code)
 {
 	if (exit_code == 1)
-		perror(msg);
+		ft_putstr_fd(msg, 1);
 	else
 		ft_putstr_fd(msg, 2);
 	get_next_line(-1);

@@ -25,7 +25,7 @@ void	load_map(const char *filename, t_map *map)
 	initialise_map(map);
 	fd = open(filename, O_RDONLY);
 	if (fd == -1)
-		ft_error_exit("open", 1);
+		ft_error_exit("Error\n\topen", 1);
 	count = 0;
 	line = get_next_line(fd);
 	while (line)
@@ -52,7 +52,7 @@ static void	check_width(t_map *map, char *line, int count)
 		get_next_line(-1);
 		free(line);
 		free_map(map->grid);
-		ft_error_exit("Error. The map should be a rectangle\n", 2);
+		ft_error_exit("Error\n\tThe map should be a rectangle\n", 1);
 	}
 }
 

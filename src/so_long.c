@@ -43,15 +43,15 @@ int	main(int argc, char const *argv[])
 	t_game	game;
 
 	if (argc != 2)
-		ft_error_exit("Error. Use: ./so_long <map.ber>\n", 2);
-	if (!is_valid_extension(argv[1] +5))
-		ft_error_exit("Error. The map should have the extension .ber\n", 2);
+		ft_error_exit("Error\n\tUse: ./so_long <map.ber>\n", 1);
+	if (!is_valid_extension(argv[1] + 5))
+		ft_error_exit("Error\n\tThe map should have the extension .ber\n", 1);
 	load_map(argv[1], &map);
 	copy = copy_map(map.grid, map.height);
 	if (!(flood_fill(&map, copy)))
 	{
 		game.map = map;
-		free_map_and_exit(&game.map, "The map has no solution\n", 2);
+		free_map_and_exit(&game.map, "Error\n\tThe map has no solution\n", 1);
 	}
 	game_init(&game, &map);
 	load_textures(&game);
