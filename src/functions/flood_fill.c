@@ -38,7 +38,11 @@ void	flood(char **grid, int x, int y, t_flood *info)
 	if (c == 'C')
 		info->collectibles--;
 	if (c == 'E')
+	{
 		info->exits--;
+		grid[y][x] = '1';
+		return ;
+	}
 	grid[y][x] = 'V';
 	flood(grid, x - 1, y, info);
 	flood(grid, x + 1, y, info);

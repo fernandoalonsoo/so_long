@@ -44,7 +44,7 @@ int	main(int argc, char const *argv[])
 
 	if (argc != 2)
 		ft_error_exit("Error\n\tUse: ./so_long <map.ber>\n", 1);
-	if (!is_valid_extension(argv[1] + 5))
+	if (!is_valid_extension(argv[1]))
 		ft_error_exit("Error\n\tThe map should have the extension .ber\n", 1);
 	load_map(argv[1], &map);
 	copy = copy_map(map.grid, map.height);

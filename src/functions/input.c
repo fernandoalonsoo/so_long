@@ -41,6 +41,11 @@ int	handle_input(int keycode, t_game *game)
 	return (0);
 }
 
+int	collected_all(t_game *game)
+{
+	return (game->map.collectible_count == 0);
+}
+
 void	move_player(t_game *game, int dx, int dy)
 {
 	int		new_x;
@@ -50,16 +55,16 @@ void	move_player(t_game *game, int dx, int dy)
 	new_x = game->map.player_x + dx;
 	new_y = game->map.player_y + dy;
 	next_tile = game->map.grid[new_y][new_x];
-	game->steps++;
-	if (next_tile == '1')
+	if (next_tile == '1' || (next_tile == 'E' && !(collected_all(game))))
 		return ;
-	if (next_tile == 'C')
-		game->map.collectible_count--;
-	if (next_tile == 'E' && game->map.collectible_count == 0)
+	game->steps++;
+	if (next_tile == 'E')
 	{
 		ft_printf("Steps: %d\n", game->steps);
 		close_game(game);
 	}
+	if (next_tile == 'C')
+		game->map.collectible_count--;
 	if (game->map.grid[game->map.player_y][game->map.player_x] != 'E')
 		game->map.grid[game->map.player_y][game->map.player_x] = '0';
 	game->map.player_x = new_x;

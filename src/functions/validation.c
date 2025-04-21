@@ -46,5 +46,7 @@ int	is_valid_extension(const char *filename)
 	len = ft_strlen(filename);
 	if (len < 5)
 		return (0);
-	return (ft_strcmp(filename + len - 4, ".ber") == 0);
+	if (ft_strcmp(filename + len - 4, ".ber") != 0)
+		return (0);
+	return (filename[len - 5] != '/');
 }
